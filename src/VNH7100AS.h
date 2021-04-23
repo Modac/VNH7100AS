@@ -22,7 +22,7 @@ public:
   void begin(int8_t pwmPin=-1, int8_t inaPin=-1, int8_t inbPin=-1, int8_t sel0Pin=-1, int8_t csPin=-1);
   uint8_t setSpeed(int speed); 
   uint8_t brake(int brakePower);
-  uint8_t status(); 
+  uint8_t isFault(); 
   int motorCurrent();
   int speed = 0;
 
