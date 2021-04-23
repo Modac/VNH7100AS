@@ -1,5 +1,5 @@
 /*
- * VNH3SP30 motor driver library
+ * VNH7100AS motor driver library
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public 
@@ -7,6 +7,7 @@
  * version 2.1 of the License, or (at your option) any later version.
  *   
  * Created 2 June 2019 Bart Mellink
+ * Modified 23 April 2021 Pascal Goldbrunner
  */
 
 #include <Arduino.h>
