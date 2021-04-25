@@ -24,6 +24,7 @@ public:
   uint8_t brake(int brakePower);
   uint8_t isFault(); 
   int motorCurrent();
+  void setDigital(uint8_t isDigital);
   int speed = 0;
 
 private:
@@ -33,6 +34,7 @@ private:
   uint8_t _sel0Pin = -1;
   uint8_t _csPin = -1;
   uint8_t forward = true; // last speed command is forward
+  uint8_t digital = false;
 };
 
 #endif
