@@ -120,7 +120,7 @@ int VNH7100AS::motorCurrent()
   return analogRead(this->_csPin);
 }
 
-void setDigital(uint8_t isDigital)
+void VNH7100AS::setDigital(uint8_t isDigital)
 {
   this->digital = isDigital;
 }
