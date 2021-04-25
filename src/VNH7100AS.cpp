@@ -27,7 +27,7 @@ void VNH7100AS::begin(int8_t pwmPin, int8_t inaPin, int8_t inbPin, int8_t sel0Pi
   if (inaPin>0) pinMode(inaPin, OUTPUT);
   if (inbPin>0) pinMode(inbPin, OUTPUT);
   if (sel0Pin>0 && csPin>0) {
-    pinMode(diagPin, INPUT_PULLUP);
+    pinMode(sel0Pin, OUTPUT);
     pinMode(csPin, INPUT); // analog input
   } else {
     this->_sel0Pin = -1;
@@ -69,8 +69,11 @@ uint8_t VNH7100AS::brake(int brakePower) {
 
 uint8_t VNH7100AS::isFault() {
 	if (this->_sel0Pin<=0) return false;
-	// TODO
-	//return !digitalRead(this->_diagPin);
+  uint8_t isfault = analogRead(this->_csPin) >= 1000;
+  if(isfault){
+    brake(0);
+  }
+  return isfault;
 } 
 
 int VNH7100AS::motorCurrent() {
