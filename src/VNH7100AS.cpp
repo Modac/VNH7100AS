@@ -77,7 +77,11 @@ uint8_t VNH7100AS::isFault() {
 } 
 
 int VNH7100AS::motorCurrent() {
-	// TODO
-	//if (this->_csPin<0) return 0;
-	//return analogRead(this->_csPin);
+  if(this->forward)     // INA = HIGH, INB = LOW
+    digitalWrite(this->_sel0Pin, HIGH);
+  else                  // INA = LOW, INB = HIGH
+    digitalWrite(this->_sel0Pin, LOW);
+	
+  if (this->_csPin<0) return 0;
+	return analogRead(this->_csPin);
 }
