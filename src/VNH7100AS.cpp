@@ -72,7 +72,7 @@ uint8_t VNH7100AS::setSpeed(int speed)
   {
     analogWrite(this->_pwmPin, speed * 51 / 80); // map 400 to 255 and generate pwm
   }
-  return this->status();
+  return !this->isFault();
 }
 
 uint8_t VNH7100AS::brake(int brakePower)
@@ -93,7 +93,7 @@ uint8_t VNH7100AS::brake(int brakePower)
     analogWrite(this->_pwmPin, brakePower * 51 / 80); // map 400 to 255
   }
   this->speed = 0;
-  return this->status();
+  return !this->isFault();
 }
 
 uint8_t VNH7100AS::isFault()
