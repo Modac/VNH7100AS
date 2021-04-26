@@ -30,13 +30,10 @@ void VNH7100AS::begin(int8_t pwmPin, int8_t inaPin, int8_t inbPin, int8_t sel0Pi
     pinMode(inaPin, OUTPUT);
   if (inbPin > 0)
     pinMode(inbPin, OUTPUT);
-  if (sel0Pin > 0 && csPin > 0)
-  {
+  if (sel0Pin > 0 && csPin > 0) {
     pinMode(sel0Pin, OUTPUT);
     pinMode(csPin, INPUT); // analog input
-  }
-  else
-  {
+  } else {
     this->_sel0Pin = -1;
     this->_csPin = -1;
   }
@@ -47,14 +44,11 @@ uint8_t VNH7100AS::setSpeed(int speed)
 {
   // Ensure we do not reverse the ina and inb setting in case speed==0 to guarantee the motor
   // will free run to a stop (if you reverse ina and inb setting the controller will issue a full brake)
-  if (speed > 0 || (speed == 0 && this->forward))
-  {
+  if (speed > 0 || (speed == 0 && this->forward)) {
     digitalWrite(this->_inaPin, HIGH);
     digitalWrite(this->_inbPin, LOW);
     this->forward = true;
-  }
-  else if (speed < 0)
-  {
+  } else if (speed < 0) {
     digitalWrite(this->_inaPin, LOW);
     digitalWrite(this->_inbPin, HIGH);
     speed = -speed;
@@ -64,12 +58,9 @@ uint8_t VNH7100AS::setSpeed(int speed)
     speed = 400;
   this->speed = (this->forward ? speed : -speed);
   delayMicroseconds(20); // to wake from standby wait 20us after setting INA/INB for PWM. Just do it always
-  if (this->digital)
-  {
+  if (this->digital) {
     digitalWrite(this->_pwmPin, (speed == 0) ? LOW : HIGH);
-  }
-  else
-  {
+  } else {
     analogWrite(this->_pwmPin, speed * 51 / 80); // map 400 to 255 and generate pwm
   }
   return !this->isFault();
@@ -84,12 +75,9 @@ uint8_t VNH7100AS::brake(int brakePower)
   digitalWrite(this->_inaPin, LOW);
   digitalWrite(this->_inbPin, LOW);
   delayMicroseconds(20); // to wake from standby wait 20us after setting INA/INB for PWM. Just do it always
-  if (this->digital)
-  {
+  if (this->digital) {
     digitalWrite(this->_pwmPin, (speed == 0) ? LOW : HIGH);
-  }
-  else
-  {
+  } else {
     analogWrite(this->_pwmPin, brakePower * 51 / 80); // map 400 to 255
   }
   this->speed = 0;
@@ -100,9 +88,8 @@ uint8_t VNH7100AS::isFault()
 {
   if (this->_sel0Pin <= 0)
     return false;
-  uint8_t isfault = analogRead(this->_csPin) >= 1000;
-  if (isfault)
-  {
+  uint8_t isfault = analogRead(this->_csPin) >= 1020;
+  if (isfault) {
     brake(0);
   }
   return isfault;
@@ -110,13 +97,37 @@ uint8_t VNH7100AS::isFault()
 
 int VNH7100AS::motorCurrent()
 {
+  if (this->_csPin < 0)
+    return 0;
+
+  setSEL0();
+
+  return readCS();
+}
+
+int VNH7100AS::motorCurrent(uint16_t readings)
+{
+  if (this->_csPin < 0)
+    return 0;
+
+  setSEL0();
+
+  int res = 0;
+  for(uint16_t i=0; i<readings; i++){
+    res += readCS();
+  }
+
+  return res/readings;
+}
+
+void setSEL0() { 
   if (this->forward) // INA = HIGH, INB = LOW
     digitalWrite(this->_sel0Pin, HIGH);
   else // INA = LOW, INB = HIGH
     digitalWrite(this->_sel0Pin, LOW);
+}
 
-  if (this->_csPin < 0)
-    return 0;
+int readCS() { 
   return analogRead(this->_csPin);
 }
 
