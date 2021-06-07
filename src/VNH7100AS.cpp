@@ -120,14 +120,14 @@ int VNH7100AS::motorCurrent(uint16_t readings)
   return res/readings;
 }
 
-void setSEL0() { 
+void VNH7100AS::setSEL0() { 
   if (this->forward) // INA = HIGH, INB = LOW
     digitalWrite(this->_sel0Pin, HIGH);
   else // INA = LOW, INB = HIGH
     digitalWrite(this->_sel0Pin, LOW);
 }
 
-int readCS() { 
+int VNH7100AS::readCS() { 
   return analogRead(this->_csPin);
 }
 
