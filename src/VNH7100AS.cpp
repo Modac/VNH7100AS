@@ -74,7 +74,6 @@ uint8_t VNH7100AS::brake(int brakePower)
     brakePower = 400;
   digitalWrite(this->_inaPin, LOW);
   digitalWrite(this->_inbPin, LOW);
-  delayMicroseconds(20); // to wake from standby wait 20us after setting INA/INB for PWM. Just do it always
   if (this->digital) {
     digitalWrite(this->_pwmPin, (speed == 0) ? LOW : HIGH);
   } else {
